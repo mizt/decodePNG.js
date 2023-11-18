@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="robots" content="noindex,nofollow">
+		<meta name="viewport" content="width=device-width,user-scalable=no,minimum-scale=1.0,maximum-scale=1.0">
+		<title>spng.js</title>
+		<link rel="icon" href="data:;base64,=">
+		<style>
+			
+			* {
+				margin:0;
+				padding:0;
+				text-rendering:optimizeSpeed;
+				letter-spacing:1.5px;
+				font-kerning:none;
+				outline : none;
+			}
+			
+			body {
+				-webkit-text-size-adjust:100%;
+				font-family: 'Hiragino Kaku Gothic Pro','ヒラギノ角ゴ Pro W3','メイリオ',Meiryo,'ＭＳ Ｐゴシック',sans-serif;
+				overflow-x:hidden;
+				color:#242424;
+				font-weight:normal;
+				font-size:14px;
+				line-height:26px;
+				font-feature-settings:"palt";
+				word-wrap: break-word;
+				word-break:break-word;
+				text-align:left;
+				-webkit-tap-highlight-color: transparent;
+				background:#FFF;
+			}
+			
+			::selection { background:rgba(128,128,128,0.25); }
+			::-moz-selection { background:rgba(128,128,128,0.25); }
+			pre::selection { background:rgba(255,255,255,0.25); }
+			pre::-moz-selection { background:rgba(255,255,255,0.25); }
+			img::selection, iframe::selection { background:rgba(0,0,0,0); }
+			img::-moz-selection, iframe::-moz-selection { background:rgba(0,0,0,0); }
+			
+			.strikethrough { text-decoration:line-through; } 
+			.br:before { content:"\A"; white-space:pre; }
+			
+			.condensed {
+				position:relative;
+				width:111%;
+				transform-origin:top left;
+				transform:scale(0.9,1);
+			}
+			
+			#container {
+				position:relative;
+				width:86vw;
+				min-height:100%;
+				max-width:1921px;
+				margin:0 auto 0 auto;
+				padding:2px 0 48px 0;
+			}
+			
+			h1, h2, h3, h4, p, ul, ol {
+				margin-top:17px;
+				margin-bottom:-7px;
+			}
+			
+			h1, h2, h3, h4 {
+				font-weight:600;
+			}
+			
+			h1 {
+				font-size:22px;
+				line-height:32px;
+				text-align:justify;
+				text-align-last:left;
+				word-wrap: break-word;
+				word-break:break-all;
+			}
+			
+			h2 {
+				font-size:18px;
+				line-height:28px;
+				position:relative;
+				width:111%;
+				transform-origin:top left;
+				transform:scale(0.9,1);
+			}
+			
+			h3 {
+				font-size:16px;
+				line-height:26px;
+				position:relative;
+				width:111%;
+				transform-origin:top left;
+				transform:scale(0.9,1);
+			}
+			
+			h4, p, li {
+				font-size:14px;
+				line-height:24px;
+			}
+			
+			ul > li {
+				margin-left:1.5em;
+			}
+			
+			ol > li {
+				margin-left:2.0em;
+			}
+			
+			p {
+				font-weight:normal;
+				text-align:left;
+				word-wrap: break-word;
+				word-break: break-strict;
+			}
+			
+			#container > h1:last-child,
+			#container > h2:last-child,
+			#container > h3:last-child,
+			#container > p:last-child {
+				margin-bottom:0px;
+			}
+			
+			img, pre, table, video, audio { margin-top:24px; }
+			
+			a {
+				color:#00F;
+				text-decoration:none;
+			}
+			
+			pre {
+				display:inline-block;
+				font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,Courier,monospace;
+				font-size:13px;
+				line-height:20px;
+				border-radius:2px;
+				padding:12px 16px;
+				background-color:#336;
+				color:#EEE;
+				tab-size:2;
+				white-space:pre;
+				white-space:pre-wrap;
+				white-space:-pre-wrap;
+				white-space:-o-pre-wrap;
+				white-space:-moz-pre-wrap;
+				white-space:-hp-pre-wrap;
+				word-wrap:break-word;
+				word-break:break-all;
+				box-sizing: border-box;
+			}
+			
+			img {
+				display:block;
+				width:auto;
+				max-width:100%;
+				background:#FAFAFA;
+				vertical-align:top;
+			}
+			
+		</style>
+		<script src="decodePNG.js"></script>
+	</head>
+	<body>
+		<script>
+			
+			fetch("./test.png").then((response)=>{
+				if(response.ok) {
+					return response.arrayBuffer();
+				}
+				else {
+					throw new Error(response.status);
+				}
+			}).then((arrayBuffer)=>{
+				
+				const container = document.createElement("div");
+				container.id = "container";
+				
+				document.body.appendChild(container);
+				
+				const h1 = document.createElement("h1");
+				h1.textContent = "spng.js";
+				container.appendChild(h1);
+				
+				const note = document.createElement("p");
+				note.textContent = "Read generated PNG by the following code.";
+				container.appendChild(note);
+				
+				const pre = document.createElement("pre");
+				pre.textContent = `float value = M_PI;
+unsigned int data = *(unsigned int *)(&value);
+stbi_write_png("../docs/test.png",1,1,4,(void const *)(&data),1<<2);`;
+				
+				container.appendChild(pre);
+				
+				let divs = [
+					document.createElement("div"),
+					document.createElement("div")
+				];
+				container.appendChild(divs[0]);
+				
+				const img = new Image();
+				
+				img.onload = (function() {
+					const canvas = document.createElement("canvas");
+					canvas.width = canvas.height = 1;
+					const contxt = canvas.getContext("2d"); 
+					contxt.drawImage(this,0,0);
+					const data = contxt.getImageData(0,0,1,1).data;
+					const float = new Float32Array(data.buffer)[0];
+					const p = [
+						document.createElement("h2"),
+						document.createElement("p")
+					];
+					p[0].textContent = "canvas (getImageData)";
+					
+					p[1].textContent = ""+float;
+					divs[0].appendChild(p[0]);
+					divs[0].appendChild(p[1]);
+					
+				}).bind(img);
+				img.src = "test.png";
+				
+				const p = [
+					document.createElement("h2"),
+					document.createElement("p")
+				];
+				p[0].textContent = "spng (Emscripten)";
+				
+				class U8 {
+					constructor(len) {
+						this.length = len;
+						this.bytes = Module._malloc(len);
+						this.buffer = new Uint8Array(Module.HEAPU8.buffer,this.bytes,len);
+					}
+					cleanup() {
+						Module._free(this.bytes);
+						this.buffer = null;
+					}
+				};
+				
+				const decodePNG = Module.cwrap("decodePNG","number",["number","number","number","number","number","number"]);
+				const bytes = new Uint8Array(arrayBuffer);
+				const PNG = new U8(bytes.length);
+				PNG.buffer.set(bytes);
+				const result = new U8(4);
+				decodePNG(result.buffer.byteOffset,1,1,PNG.buffer.byteOffset,PNG.buffer.length);
+				p[1].textContent = new Float32Array(result.buffer.buffer.slice(result.buffer.byteOffset,result.buffer.byteOffset+4))[0]
+				divs[1].appendChild(p[0]);
+				divs[1].appendChild(p[1]);
+				container.appendChild(divs[1]);
+				
+			}).catch((e)=>{
+				console.log(e);
+			});
+			
+		</script>
+	</body>
+</html>
