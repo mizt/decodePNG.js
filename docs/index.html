@@ -179,7 +179,7 @@
 				document.body.appendChild(container);
 				
 				const h1 = document.createElement("h1");
-				h1.textContent = "spng.js";
+				h1.innerHTML = "<a href=\"https://github.com/mizt/decodePNG.js\" target=\"blank\" rel=\"noopener noreferrer\">decodePNG.js</a>";
 				container.appendChild(h1);
 				
 				const note = document.createElement("p");
@@ -225,7 +225,9 @@ stbi_write_png("../docs/test.png",1,1,4,(void const *)(&data),1<<2);`;
 					document.createElement("h2"),
 					document.createElement("p")
 				];
-				p[0].textContent = "spng (Emscripten)";
+				
+				const a = document.createElement("a");
+				p[0].innerHTML = "<a href=\"https://libspng.org/\" target=\"blank\" rel=\"noopener noreferrer\">spng</a> (Emscripten)";
 				
 				class U8 {
 					constructor(len) {
