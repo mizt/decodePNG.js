@@ -163,8 +163,11 @@
 	</head>
 	<body>
 		<script>
+			(e=>{const t="function",n="isNode",o=(e,t)=>typeof e===t,r=(e,t)=>{null!==t&&(Array.isArray(t)?t.map(t=>r(e,t)):(i[n](t)||(t=document.createTextNode(t)),e.appendChild(t)))};function i(e,a){let d,f,l=arguments,c=1;if(e=i.isElement(e)?e:document.createElement(e),o(a,"object")&&!i[n](a)&&!Array.isArray(a))for(d in c++,a)f=a[d],o(d=i.attrMap[d]||d,t)?d(e,f):o(f,t)?e[d]=f:e.setAttribute(d,f);for(;c<l.length;c++)r(e,l[c]);return e}i.attrMap={},i.isElement=(e=>e instanceof Element),i[n]=(e=>e instanceof Node),i.proxy=new Proxy(i,{get:(e,t)=>(!(t in i)&&(i[t]=i.bind(null,t)),i[t])}),e(i,t)})((e,t)=>{"object"==typeof exports?module.exports=e:typeof define===t&&define.amd?define(()=>e):this.crel=e});
+		</script>
+		<script>
 			
-			fetch("./test.png").then((response)=>{
+			fetch("./1px.png").then((response)=>{
 				if(response.ok) {
 					return response.arrayBuffer();
 				}
@@ -173,31 +176,25 @@
 				}
 			}).then((arrayBuffer)=>{
 				
-				const container = document.createElement("div");
-				container.id = "container";
+				const container = crel("div",{"id":"container"});
+				crel(document.body,container);
 				
-				document.body.appendChild(container);
+				crel(container,
+					crel("h1",crel("a",{"href":"https://github.com/mizt/decodePNG.js","target":"blank","rel":"noopener noreferrer"},"decodePNG.js")),
+					crel("h2","Compare with the value read into canvas.")
+				);
 				
-				const h1 = document.createElement("h1");
-				h1.innerHTML = "<a href=\"https://github.com/mizt/decodePNG.js\" target=\"blank\" rel=\"noopener noreferrer\">decodePNG.js</a>";
-				container.appendChild(h1);
-				
-				const note = document.createElement("p");
-				note.textContent = "Read generated PNG by the following code.";
-				container.appendChild(note);
-				
-				const pre = document.createElement("pre");
-				pre.textContent = `float value = M_PI;
+				const note = crel("p","Read generated ",crel("a",{"href":"./1px.png","target":"blank","rel":"noopener noreferrer"},"1px.png")," by the following code.");
+				crel(container,note);
+				crel(container,crel("pre",`float value = M_PI;
 unsigned int data = *(unsigned int *)(&value);
-stbi_write_png("../docs/test.png",1,1,4,(void const *)(&data),1<<2);`;
-				
-				container.appendChild(pre);
+stbi_write_png("../docs/1px.png",1,1,4,(void const *)(&data),1<<2);`));
 				
 				let divs = [
-					document.createElement("div"),
-					document.createElement("div")
+					crel("div"),
+					crel("div")
 				];
-				container.appendChild(divs[0]);
+				crel(container,divs[0]);
 				
 				const img = new Image();
 				
@@ -209,7 +206,7 @@ stbi_write_png("../docs/test.png",1,1,4,(void const *)(&data),1<<2);`;
 					const data = contxt.getImageData(0,0,1,1).data;
 					const float = new Float32Array(data.buffer)[0];
 					const p = [
-						document.createElement("h2"),
+						document.createElement("h3"),
 						document.createElement("p")
 					];
 					p[0].textContent = "canvas (getImageData)";
@@ -219,15 +216,10 @@ stbi_write_png("../docs/test.png",1,1,4,(void const *)(&data),1<<2);`;
 					divs[0].appendChild(p[1]);
 					
 				}).bind(img);
-				img.src = "test.png";
+				img.src = "1px.png";
 				
-				const p = [
-					document.createElement("h2"),
-					document.createElement("p")
-				];
-				
-				const a = document.createElement("a");
-				p[0].innerHTML = "<a href=\"https://libspng.org/\" target=\"blank\" rel=\"noopener noreferrer\">spng</a> (Emscripten)";
+				const h3 = crel("h3",crel("a",{"href":"https://libspng.org/","target":"blank","rel":"noopener noreferrer"},"spng")," (Emscripten)");
+				const p = crel("p");
 				
 				class U8 {
 					constructor(len) {
@@ -247,10 +239,9 @@ stbi_write_png("../docs/test.png",1,1,4,(void const *)(&data),1<<2);`;
 				PNG.buffer.set(bytes);
 				const result = new U8(4);
 				decodePNG(result.buffer.byteOffset,1,1,PNG.buffer.byteOffset,PNG.buffer.length);
-				p[1].textContent = new Float32Array(result.buffer.buffer.slice(result.buffer.byteOffset,result.buffer.byteOffset+4))[0]
-				divs[1].appendChild(p[0]);
-				divs[1].appendChild(p[1]);
-				container.appendChild(divs[1]);
+				p.textContent = new Float32Array(result.buffer.buffer.slice(result.buffer.byteOffset,result.buffer.byteOffset+4))[0];
+				
+				crel(container,crel(divs[1],h3,p));
 				
 			}).catch((e)=>{
 				console.log(e);
